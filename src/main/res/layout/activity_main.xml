@@ -1,0 +1,264 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/gradiente"
+    android:orientation="vertical"
+    tools:context=".HomeActivity">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
+        <include layout="@layout/toolbar" />
+
+        <ImageView
+            android:id="@+id/imgPropiedad"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:minHeight="50dp"
+            app:srcCompat="@android:drawable/ic_menu_gallery" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <EditText
+                android:id="@+id/txtNombrePropiedad"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="9"
+                android:hint="Nombre de la propiedad"
+                android:inputType="textPersonName" />
+
+            <ImageButton
+                android:id="@+id/btnCamara"
+                style="@style/Widget.AppCompat.Button.Colored"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:minWidth="16dp"
+                app:srcCompat="@drawable/baseline_photo_camera_white_24dp" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <RadioGroup
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:baselineAligned="false"
+                android:gravity="center"
+
+                android:orientation="horizontal">
+
+                <RadioButton
+                    android:id="@+id/btnAlquiler"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginRight="30dp"
+                    android:text="Alquiler" />
+
+                <RadioButton
+                    android:id="@+id/btnVenta"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="30dp"
+                    android:text="Venta" />
+            </RadioGroup>
+        </LinearLayout>
+
+
+        <TextView
+            android:id="@+id/txtDormitorios"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:paddingLeft="10dp"
+            android:text="@string/dormitorios_deslizar"
+            android:textSize="16sp" />
+
+        <SeekBar
+            android:id="@+id/skDormitorios"
+            style="@style/Widget.AppCompat.SeekBar.Discrete"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10sp"
+            android:indeterminate="false"
+            android:max="5"
+            android:progress="0" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:paddingTop="16dp">
+
+            <TextView
+                android:id="@+id/lblInmueble"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="3"
+                android:paddingLeft="10dp"
+                android:text="Inmueble:"
+                android:textSize="16sp" />
+
+            <Spinner
+                android:id="@+id/spinnerInmuebles"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="2"
+                android:popupBackground="@color/naranja" />
+        </LinearLayout>
+
+        <Switch
+            android:id="@+id/swtCochera"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:paddingLeft="10dp"
+            android:paddingTop="16dp"
+            android:showText="false"
+            android:singleLine="false"
+            android:switchPadding="16dp"
+            android:text="Cochera"
+            android:textColor="#FFFFFF"
+            android:textSize="16sp" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:paddingTop="10dp">
+
+            <EditText
+                android:id="@+id/txtDireccion"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="10"
+                android:hint="Dirección:"
+                android:inputType="textPersonName" />
+
+            <ImageButton
+                android:id="@+id/btnLocalizar"
+                style="@style/Widget.AppCompat.Button.Colored"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="0"
+                android:minWidth="5dp"
+                app:srcCompat="@android:drawable/ic_dialog_map" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center_vertical"
+            android:orientation="horizontal">
+
+            <TextView
+                android:id="@+id/lblPrecio"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:paddingLeft="10dp"
+                android:text="Precio:"
+                android:textSize="16sp" />
+
+            <EditText
+                android:id="@+id/txtPrecio"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="6"
+                android:inputType="number"
+                android:textSize="18sp" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <RadioGroup
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginTop="-10dp"
+                android:baselineAligned="false"
+
+                android:gravity="center"
+                android:orientation="horizontal"
+                android:paddingLeft="30dp">
+
+                <RadioButton
+                    android:id="@+id/btnUSD"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginRight="30dp"
+                    android:text="USD" />
+
+                <RadioButton
+                    android:id="@+id/btnARS"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="30dp"
+                    android:text="ARS" />
+            </RadioGroup>
+        </LinearLayout>
+
+
+        <TextView
+            android:id="@+id/lblDetalle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:paddingLeft="10dp"
+            android:text="@string/detalle"
+            android:textSize="16sp" />
+        <EditText
+            android:id="@+id/txtDetalle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:ems="10"
+            android:gravity="start|top"
+            android:inputType="textMultiLine" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="horizontal"
+            android:paddingTop="16dp">
+
+            <TextView
+                android:id="@+id/lblVencimiento"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="2"
+                android:paddingLeft="10dp"
+                android:text="@string/vencimiento"
+                android:textSize="16sp" />
+
+            <Spinner
+                android:id="@+id/spinnerVencimiento"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="2"
+                android:popupBackground="@color/naranja" />
+        </LinearLayout>
+
+        <Button
+            android:id="@+id/btnGuardarPropiedad"
+            android:theme="@style/Theme.AgentApp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="30dp"
+            android:text="Guardar Propiedad"
+ />
+
+    </LinearLayout>
+
+</ScrollView>

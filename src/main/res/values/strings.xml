@@ -1,0 +1,25 @@
+<resources>
+    <string name="app_name">AgentApp</string>
+    <string name="dormitorios_deslizar">Dormitorios: (Deslizar)</string>
+    <string name="detalle">Detalle:</string>
+    <string name="vencimiento">Vencimiento:</string>
+    <string-array name="inmuebles">
+        <item>Elegir...</item>
+        <item>Departamento</item>
+        <item>Casa</item>
+        <item>Cochera</item>
+        <item>Terreno</item>
+    </string-array>
+    <string-array name="vencimientos">
+        <item>Elegir...</item>
+        <item>15 días</item>
+        <item>30 días</item>
+        <item>60 días</item>
+        <item>90 días</item>
+    </string-array>
+    <string name="title_activity_localizar">Map</string>
+    <string name="location_permission_denied">El permiso no se ha otorgado</string>
+    <string name="permission_required_toast">Se requiere el permiso</string>
+    <string name="permission_rationale_location">Se requiere permiso de ubicación</string>
+
+</resources>
