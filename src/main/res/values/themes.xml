@@ -6,7 +6,7 @@
         <item name="colorPrimaryVariant">@color/purple_700</item>
         <item name="colorOnPrimary">@color/white</item>
         <!-- Secondary brand color. -->
-        <item name="colorSecondary">@color/naranja</item>
+        <item name="colorSecondary">@color/teal_200</item>
         <item name="colorSecondaryVariant">@color/teal_700</item>
         <item name="colorOnSecondary">@color/white</item>
         <!-- Status bar color. -->
@@ -19,17 +19,13 @@
         <item name="android:textColorPrimaryDisableOnly">#A3FFFFFF</item>
         <item name="android:textColorHighlight">@color/naranja</item>
         <item name="colorAccent">@color/naranja</item>
-
-
-
+        <item name="colorButtonNormal">@color/naranja</item>
 
     </style>
-<!--    <style name="AppTheme.Base" parent="Theme.MaterialComponents.DayNight.NoActionBar">-->
-<!--        <item name="colorButtonNormal">@color/naranja</item>-->
-<!--    </style>-->
-<!--    <style name="ButtonColor" parent="@style/Widget.AppCompat.Button.Colored">-->
-<!--        <item name="android:textColor">@color/white</item>-->
-<!--        <item name="colorButtonNormal">@color/naranja</item>-->
-<!--    </style>-->
-
+    <style name="AccentButton" parent="ThemeOverlay.AppCompat.Light">
+        <item name="colorAccent">@color/naranja</item>
+        <item name="colorButtonNormal">@color/white</item>
+        <item name="buttonTint">@color/white</item>
+        <item name="android:textColorHint">#EDFFFFFF</item>
+    </style>
 </resources>

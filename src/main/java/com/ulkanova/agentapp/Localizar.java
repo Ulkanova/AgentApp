@@ -2,45 +2,101 @@ package com.ulkanova.agentapp;
 
 import androidx.fragment.app.FragmentActivity;
 
+import android.annotation.SuppressLint;
+import android.app.Activity;
+import android.app.AlertDialog;
+import android.content.DialogInterface;
+import android.content.Intent;
+import android.location.Location;
 import android.os.Bundle;
+import android.util.Log;
+import android.view.View;
+import android.widget.Button;
 
+import com.google.android.gms.location.FusedLocationProviderClient;
+import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.android.gms.tasks.OnSuccessListener;
 
 public class Localizar extends FragmentActivity implements OnMapReadyCallback {
-
-    private GoogleMap mMap;
+    private FusedLocationProviderClient fusedLocationClient;
+    private GoogleMap myMap;
+    private LatLng ubicacionUsuario, ubicacionMarcador, ubicacion;
+    private MarkerOptions marcador;
+    Button btnConfirmar;
+    private static final int CODIGO_MAPA = 222;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_localizar);
-        // Obtain the SupportMapFragment and get notified when the map is ready to be used.
+        fusedLocationClient = LocationServices.getFusedLocationProviderClient(this);
+        btnConfirmar = findViewById(R.id.confirmarUbicacion);
+
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
+
+        btnConfirmar.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Log.d("MARCADOR", "onClick: "+ubicacionMarcador);
+                Log.d("MARCADOR USUARIO", "onClick: "+ubicacionUsuario);
+                if(ubicacionMarcador==null){
+                    ubicacion = ubicacionUsuario;
+                }
+                else{
+                    ubicacion = ubicacionMarcador;
+                }
+                Intent localizado = new Intent();
+                localizado.putExtra("lat", ubicacion.latitude);
+                localizado.putExtra("lng", ubicacion.longitude);
+                setResult(Activity.RESULT_OK, localizado);
+                finish();
+            }
+        });
     }
 
-    /**
-     * Manipulates the map once available.
-     * This callback is triggered when the map is ready to be used.
-     * This is where we can add markers or lines, add listeners or move the camera. In this case,
-     * we just add a marker near Sydney, Australia.
-     * If Google Play services is not installed on the device, the user will be prompted to install
-     * it inside the SupportMapFragment. This method will only be triggered once the user has
-     * installed Google Play services and returned to the app.
-     */
+
+    @SuppressLint("MissingPermission")
     @Override
     public void onMapReady(GoogleMap googleMap) {
-        mMap = googleMap;
+        fusedLocationClient.getLastLocation()
+                .addOnSuccessListener(this, new OnSuccessListener<Location>() {
+                    @Override
+                    public void onSuccess(Location location) {
+                        if (location != null) {
+                            ubicacionUsuario= new LatLng(location.getLatitude(),location.getLongitude());
+                            CameraPosition cUbicacion = new CameraPosition.Builder().target(ubicacionUsuario).zoom(13.5f).build();
+                            myMap.animateCamera(CameraUpdateFactory.newCameraPosition(cUbicacion));
+                            btnConfirmar.setEnabled(true);
+                        }
+                        else{
+                        CameraPosition cUbicacion = new CameraPosition.Builder().target(ubicacionUsuario).zoom(14).build();
+                            myMap.animateCamera(CameraUpdateFactory.newCameraPosition(cUbicacion));
+                        }
+                    }
+                });
+        myMap = googleMap;
+        myMap.setMyLocationEnabled(true);
+        myMap.getUiSettings().setScrollGesturesEnabled(true);
+        myMap.getUiSettings().setZoomControlsEnabled(true);
+        myMap.getUiSettings().setCompassEnabled(true);
+        myMap.setOnMapLongClickListener(new GoogleMap.OnMapLongClickListener() {
+            @Override
+            public void onMapLongClick(LatLng latLng) {
+                    myMap.clear();
+                    marcador = new MarkerOptions().position(latLng).draggable(true).title("Ubicación propiedad");
+                    ubicacionMarcador = latLng;
+                    myMap.addMarker(marcador);
+            }
+        });
 
-        // Add a marker in Sydney and move the camera
-        LatLng sydney = new LatLng(-34, 151);
-        mMap.addMarker(new MarkerOptions().position(sydney).title("Marker in Sydney"));
-        mMap.moveCamera(CameraUpdateFactory.newLatLng(sydney));
     }
 }
