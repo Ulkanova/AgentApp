@@ -9,6 +9,8 @@
     android:background="@drawable/line"
     app:contentInsetLeft="0dp"
     app:contentInsetStart="0dp"
+    android:theme="@style/Mi_Toolbar_Theme"
+
     >
     <TextView
         android:id="@+id/toolbarText"

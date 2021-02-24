@@ -5,10 +5,13 @@ import androidx.fragment.app.FragmentActivity;
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.location.Location;
+import android.location.LocationManager;
 import android.os.Bundle;
+import android.provider.Settings;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
@@ -73,13 +76,22 @@ public class Localizar extends FragmentActivity implements OnMapReadyCallback {
                     public void onSuccess(Location location) {
                         if (location != null) {
                             ubicacionUsuario= new LatLng(location.getLatitude(),location.getLongitude());
-                            CameraPosition cUbicacion = new CameraPosition.Builder().target(ubicacionUsuario).zoom(13.5f).build();
+                            CameraPosition cUbicacion = new CameraPosition.Builder().target(ubicacionUsuario).zoom(14f).build();
                             myMap.animateCamera(CameraUpdateFactory.newCameraPosition(cUbicacion));
                             btnConfirmar.setEnabled(true);
                         }
-                        else{
-                        CameraPosition cUbicacion = new CameraPosition.Builder().target(ubicacionUsuario).zoom(14).build();
-                            myMap.animateCamera(CameraUpdateFactory.newCameraPosition(cUbicacion));
+                        else if (! localizacionActiva()){
+                            new AlertDialog.Builder(Localizar.this)
+                                    .setMessage( "Active la ubicación del dispositivo" )
+                                    .setPositiveButton( "Activar" , new
+                                            DialogInterface.OnClickListener() {
+                                                @Override
+                                                public void onClick (DialogInterface paramDialogInterface , int paramInt) {
+                                                    startActivity(new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS )) ;
+                                                }
+                                            })
+                                    .setNegativeButton( "Cancelar" , null )
+                                    .show();
                         }
                     }
                 });
@@ -95,8 +107,26 @@ public class Localizar extends FragmentActivity implements OnMapReadyCallback {
                     marcador = new MarkerOptions().position(latLng).draggable(true).title("Ubicación propiedad");
                     ubicacionMarcador = latLng;
                     myMap.addMarker(marcador);
+                    btnConfirmar.setEnabled(true);
             }
         });
 
+    }
+
+    private boolean localizacionActiva() {
+        LocationManager lm = (LocationManager)  getSystemService(Context.LOCATION_SERVICE) ;
+        boolean gps_enabled = false;
+        boolean network_enabled = false;
+        try {
+            gps_enabled = lm.isProviderEnabled(LocationManager.GPS_PROVIDER) ;
+        } catch (Exception e) {
+            e.printStackTrace() ;
+        }
+        try {
+            network_enabled = lm.isProviderEnabled(LocationManager.NETWORK_PROVIDER) ;
+        } catch (Exception e) {
+            e.printStackTrace() ;
+        }
+       return (gps_enabled || network_enabled);
     }
 }

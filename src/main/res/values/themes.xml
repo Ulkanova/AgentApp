@@ -21,11 +21,19 @@
         <item name="colorAccent">@color/naranja</item>
         <item name="colorButtonNormal">@color/naranja</item>
 
+        <item name="android:popupBackground">@color/naranja</item>
+
     </style>
     <style name="AccentButton" parent="ThemeOverlay.AppCompat.Light">
         <item name="colorAccent">@color/naranja</item>
         <item name="colorButtonNormal">@color/white</item>
         <item name="buttonTint">@color/white</item>
         <item name="android:textColorHint">#EDFFFFFF</item>
+    </style>
+    <style name="Mi_Toolbar_Theme" parent="Theme.AppCompat.Light.DarkActionBar">
+        <item name="android:itemBackground">@color/naranja</item>
+        <item name="android:textColor">@color/white</item>
+        <item name="android:textColorSecondary">@color/white</item>
+
     </style>
 </resources>
