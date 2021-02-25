@@ -26,6 +26,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.RadioButton;
@@ -66,7 +67,8 @@ public class CargarPropiedadActivity extends AppCompatActivity implements AppRep
     private static final int CODIGO_MAPA = 222;
 
     Toolbar toolbar;
-    TextView toolbarTitle, dormitorios, txtDireccion, txtCoordenadas, txtNombrePropiedad, txtPrecio, txtDetalle;
+    EditText  txtDireccion, txtCoordenadas, txtNombrePropiedad, txtPrecio, txtDetalle;
+    TextView dormitorios, toolbarTitle;
     SeekBar dormitoriosSeek;
     Spinner spinnerInmuebles, spinnerVencimientos;
     ImageButton btnCamara, btnLocalizar;
@@ -75,6 +77,8 @@ public class CargarPropiedadActivity extends AppCompatActivity implements AppRep
     RadioButton btnVenta, btnAlquiler, btnPesos, btnUsd;
     SeekBar skDormitorios;
     Switch swCochera;
+
+    boolean movioSeek=false;
 
     BroadcastReceiver br;
 
@@ -123,9 +127,9 @@ public class CargarPropiedadActivity extends AppCompatActivity implements AppRep
         repository = new AppRepositoryRoom(this.getApplication(), this);
         imagenesDeLaPropiedad = new ArrayList<>();
 
-        //CAMBIAR AL VALIDAR--------------------------------------------------------------------
+
         btnGuardar.setEnabled(true);
-//----------------------------------------------------------
+
 
         // Inicializar Firebase Auth
         mAuth = FirebaseAuth.getInstance();
@@ -151,6 +155,7 @@ public class CargarPropiedadActivity extends AppCompatActivity implements AppRep
         dormitoriosSeek.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
             @Override
             public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
+                movioSeek=true;
                 switch (progress) {
                     case 0:
                         dormitorios.setText("Dormitorios: Monoambiente");
@@ -165,6 +170,7 @@ public class CargarPropiedadActivity extends AppCompatActivity implements AppRep
             }
             @Override
             public void onStartTrackingTouch(SeekBar seekBar) {
+                movioSeek=true;
                 switch (seekBar.getProgress()) {
                     case 0:
                         dormitorios.setText("Dormitorios: Monoambiente");
@@ -181,6 +187,7 @@ public class CargarPropiedadActivity extends AppCompatActivity implements AppRep
             public void onStopTrackingTouch(SeekBar seekBar) {
             }
         });
+
         btnCamara.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -201,7 +208,24 @@ public class CargarPropiedadActivity extends AppCompatActivity implements AppRep
                 guardarPropiedad();
             }
         });
+
+        View.OnFocusChangeListener focusListener = new View.OnFocusChangeListener() {
+            public void onFocusChange(View v, boolean hasFocus) {
+             if (v instanceof EditText && !hasFocus) {
+                    if (vacio((EditText) v)) {
+                        ((EditText) v).setError("Campo requerido");
+                    } else ((EditText) v).setError(null);
+                }
+            }
+        };
+
+        txtNombrePropiedad.setOnFocusChangeListener(focusListener);
+        txtDetalle.setOnFocusChangeListener(focusListener);
+        txtPrecio.setOnFocusChangeListener(focusListener);
+        txtDireccion.setOnFocusChangeListener(focusListener);
+
     }
+    //    ------------------------------------INICIO---MENU------------------------------------------
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.menu,menu);
@@ -218,36 +242,64 @@ public class CargarPropiedadActivity extends AppCompatActivity implements AppRep
                 Intent intentCrearItem = new Intent(this,ListaPropiedades.class);
                 startActivity(intentCrearItem);
                 return true;
+            case R.id.itmCerrarSesion:
+                FirebaseAuth.getInstance().signOut();
+                Toast.makeText(CargarPropiedadActivity.this, "Hasta la próxima!", Toast.LENGTH_SHORT).show();
+                Intent intentCerrarSesion = new Intent(this,LoginActivity.class);
+                startActivity(intentCerrarSesion);
+                return true;
             case android.R.id.home: onBackPressed(); return true;
             default:
                 Toast.makeText(this, "Menú no válido", Toast.LENGTH_SHORT).show();
         }
         return super.onOptionsItemSelected(item);
     }
-    private void guardarPropiedad() {
-        int vencimiento = Integer.parseInt(spinnerVencimientos.getSelectedItem().toString().substring(0,2));
-        Log.d("GUARDAR", "vencimiento: "+vencimiento);
-        Propiedad propiedad = new Propiedad(txtNombrePropiedad.getText().toString(),
-                btnVenta.isChecked(),
-                skDormitorios.getProgress(),
-                spinnerInmuebles.getSelectedItem().toString(),
-                swCochera.isChecked(),
-                txtDireccion.getText().toString(),
-                txtCoordenadas.getText().toString(),
-                Integer.parseInt(txtPrecio.getText().toString()),
-                btnPesos.isChecked(),
-                txtDetalle.getText().toString(),
-                vencimiento);
-        Log.d("GUARDAR", "guardarPropiedad: "+propiedad);
-        Log.d("IMAGENES", "imagenesdelapropiedad: "+imagenesDeLaPropiedad);
-        Log.d("IMAGENES", "tamaño imagenesdelapropiedad: "+imagenesDeLaPropiedad.size());
-        PropiedadConFotos propiedadConFotos = new PropiedadConFotos(propiedad, imagenesDeLaPropiedad);
-        repository.insertar(propiedadConFotos);
-        limpiar();
+    //    ------------------------------------FIN---MENU------------------------------------------
 
+    private void guardarPropiedad() {
+        if(validarCampos()) {
+            int vencimiento = Integer.parseInt(spinnerVencimientos.getSelectedItem().toString().substring(0, 2));
+            Propiedad propiedad = new Propiedad(txtNombrePropiedad.getText().toString(),
+                    btnVenta.isChecked(),
+                    skDormitorios.getProgress(),
+                    spinnerInmuebles.getSelectedItem().toString(),
+                    swCochera.isChecked(),
+                    txtDireccion.getText().toString(),
+                    txtCoordenadas.getText().toString(),
+                    Integer.parseInt(txtPrecio.getText().toString()),
+                    btnPesos.isChecked(),
+                    txtDetalle.getText().toString(),
+                    vencimiento);
+            PropiedadConFotos propiedadConFotos = new PropiedadConFotos(propiedad, imagenesDeLaPropiedad);
+            repository.insertar(propiedadConFotos);
+            limpiar();
+        }
+        else {
+            Toast.makeText(this, "Complete el formulario correctamente", Toast.LENGTH_SHORT).show();
+        }
     }
 
+    private boolean validarCampos() {
+        if(
+                !vacio(txtNombrePropiedad) &&
+                (btnAlquiler.isChecked() || btnVenta.isChecked())
+                && movioSeek
+                && spinnerInmuebles.getSelectedItemPosition()!=0
+                && !vacio(txtDireccion)
+                && !vacio(txtPrecio)
+                && (btnPesos.isChecked() || btnUsd.isChecked())
+                && !vacio(txtDetalle)
+                && spinnerVencimientos.getSelectedItemPosition()!=0
+        ) {
+            return true;
+        }
+        else return false;
+    }
 
+    private boolean vacio (EditText campo){
+        if(campo.getText().length()==0) return true;
+        else return false;
+    }
 
     private void lanzarCamara() {
         Intent camaraIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
@@ -288,6 +340,7 @@ public class CargarPropiedadActivity extends AppCompatActivity implements AppRep
             ImagenPropiedad imagen = new ImagenPropiedad(currentPhotoPath,"");
 
             imagenesDeLaPropiedad.add(imagen);
+            Log.d("IMAGEN PROPIEDAD", "imagenesDeLaPropiedad: "+imagenesDeLaPropiedad);
             imgPropiedad.setImageURI(imgUri);
         }
         else if (requestCode == CODIGO_MAPA && resultCode == RESULT_OK) {
